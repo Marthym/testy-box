@@ -11,9 +11,9 @@ This extension starts an embedded MongoDB.
 
 ```java
 @RegisterExtension
-static final WithEmbeddedMongo wMongo = WithEmbeddedMongo
-        .builder()
-        .setDatabaseName("my_database")
+static final WithEmbeddedMongo wMongo = WithEmbeddedMongo.builder()
+        .dbVersion(MongoVersion.V7)
+        .dbName(DATABASE)
         .build();
 ```
 
