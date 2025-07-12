@@ -34,7 +34,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * From this database, an async {@link MongoClient} is created and a Spring {@link ReactiveMongoDatabaseFactory} wrap it.
  * </p>
  *
- * <h3>Usage</h3>
+ * <b>Usage:</b>
+ *
  * <pre>{@code
  * @RegisterExtension
  * static final WithEmbeddedMongo wMongo = WithEmbeddedMongo.builder()
