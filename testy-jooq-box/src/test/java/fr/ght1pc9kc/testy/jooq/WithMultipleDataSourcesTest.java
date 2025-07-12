@@ -2,14 +2,13 @@ package fr.ght1pc9kc.testy.jooq;
 
 import fr.ght1pc9kc.testy.core.extensions.ChainedExtension;
 import fr.ght1pc9kc.testy.jooq.annotations.DbCatalogName;
+import jakarta.inject.Named;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-
-import javax.inject.Named;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
