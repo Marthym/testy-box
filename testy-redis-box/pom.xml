@@ -9,6 +9,8 @@
 
     <artifactId>testy-redis-box</artifactId>
 
+    <name>Testy Redis Box</name>
+
     <dependencies>
         <dependency>
             <groupId>fr.ght1pc9kc</groupId>
