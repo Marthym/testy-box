@@ -2,6 +2,7 @@ package fr.ght1pc9kc.testy.jooq;
 
 import fr.ght1pc9kc.testy.jooq.annotations.DbCatalogName;
 import fr.ght1pc9kc.testy.jooq.model.DatabaseTraceLevel;
+import jakarta.inject.Named;
 import org.h2.jdbcx.JdbcDataSource;
 import org.h2.tools.Server;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Objects;
 import java.util.TimeZone;

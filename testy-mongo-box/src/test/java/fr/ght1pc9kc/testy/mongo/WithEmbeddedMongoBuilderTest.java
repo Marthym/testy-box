@@ -17,7 +17,8 @@ class WithEmbeddedMongoBuilderTest {
     @RegisterExtension
     @SuppressWarnings("unused")
     static WithEmbeddedMongo wMongo = WithEmbeddedMongo.builder()
-            .setDatabaseName(DATABASE)
+            .dbVersion(MongoVersion.V7)
+            .dbName(DATABASE)
             .build();
 
     @Test

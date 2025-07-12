@@ -1,5 +1,6 @@
 package fr.ght1pc9kc.testy.jooq;
 
+import jakarta.inject.Named;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.conf.RenderNameCase;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import javax.inject.Named;
 import javax.sql.DataSource;
 import java.util.Objects;
 

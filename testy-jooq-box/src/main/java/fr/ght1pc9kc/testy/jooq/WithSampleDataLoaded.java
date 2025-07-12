@@ -1,6 +1,7 @@
 package fr.ght1pc9kc.testy.jooq;
 
 import fr.ght1pc9kc.testy.jooq.model.RelationalDataSet;
+import jakarta.inject.Named;
 import org.jooq.CreateTableElementListStep;
 import org.jooq.DSLContext;
 import org.jooq.Key;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -129,7 +129,7 @@ public final class WithSampleDataLoaded implements BeforeAllCallback, BeforeEach
             while (it.hasPrevious()) {
                 txDsl.delete(it.previous().getTable()).execute();
             }
-            records.forEach(r -> r.changed(true));
+            records.forEach(r -> r.touched(true));
             txDsl.batchInsert(records).execute();
         });
     }
