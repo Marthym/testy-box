@@ -191,6 +191,7 @@ public final class WithRabbitMock implements BeforeAllCallback, AfterAllCallback
             }
         });
 
+
         store.put(P_RABBIT_CHANNEL, channel);
         store.put(P_MOCKED_RECEIVER_PREFIX, new MockedReceiver(channel));
         store.put(P_MOCKED_SENDER_PREFIX, new MockedSender(channel));
@@ -199,14 +200,7 @@ public final class WithRabbitMock implements BeforeAllCallback, AfterAllCallback
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
         final Channel rabbitChannel = getRabbitChannel(extensionContext);
-        if (rabbitChannel.isOpen()) {
-            deleteReplyQueue(rabbitChannel);
-            rabbitChannel.close();
-        }
-        final Connection connection = getRabbitConnection(extensionContext);
-        if (connection.isOpen()) {
-            connection.close();
-        }
+        deleteReplyQueue(rabbitChannel);
     }
 
     @Override
