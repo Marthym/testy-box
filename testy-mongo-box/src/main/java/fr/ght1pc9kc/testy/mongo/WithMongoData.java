@@ -2,6 +2,7 @@ package fr.ght1pc9kc.testy.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.ght1pc9kc.testy.core.extensions.WithObjectMapper;
+import jakarta.inject.Named;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import reactor.core.publisher.Mono;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

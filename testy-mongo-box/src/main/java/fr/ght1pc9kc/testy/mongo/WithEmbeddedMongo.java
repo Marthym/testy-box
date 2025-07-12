@@ -21,19 +21,27 @@ import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
 
-import java.io.IOException;
 import java.lang.reflect.Parameter;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Allow to launch en Embedded Mongo DB
+ * Allow launching en Embedded Mongo DB
  * <p>
  * The flapdoodle download the expected version of Mongo DB in <code>~/.embedmongo</code> and
  * run a database for the test.
  * </p><p>
  * From this database, an async {@link MongoClient} is created and a Spring {@link ReactiveMongoDatabaseFactory} wrap it.
  * </p>
+ *
+ * <h3>Usage</h3>
+ * <pre>{@code
+ * @RegisterExtension
+ * static final WithEmbeddedMongo wMongo = WithEmbeddedMongo.builder()
+ *         .dbVersion(MongoVersion.V7)
+ *         .dbName(DATABASE)
+ *         .build();
+ * }</pre>
  *
  * @see <a href="https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo">flapdoodle</a>
  */
@@ -42,20 +50,23 @@ public class WithEmbeddedMongo implements BeforeAllCallback, AfterAllCallback, P
     private static final Namespace NAMESPACE = Namespace.create(WithEmbeddedMongo.class);
 
     public static final String P_MONGO_DB_NAME = "mongoDbName";
-    private static final String P_MONGO_PROCESS = "mongoPocess";
+    private static final String P_MONGO_PROCESS = "mongoProcess";
     private static final String P_MONGO_CLIENT = "mongoClient";
     private static final String P_MONGO_FACTORY = "reactiveMongoFactory";
     private static final String P_MONGO_TEMPLATE = "reactiveMongoTemplate";
+
+    private final MongoVersion mongoVersion;
 
     @Getter
     private final String databaseName;
     private final AtomicReference<ReactiveMongoDatabaseFactory> atomicMongoFactory;
 
     public WithEmbeddedMongo() {
-        this(UUID.randomUUID().toString());
+        this(MongoVersion.V8, UUID.randomUUID().toString());
     }
 
-    private WithEmbeddedMongo(String databaseName) {
+    private WithEmbeddedMongo(MongoVersion mongoVersion, String databaseName) {
+        this.mongoVersion = mongoVersion;
         this.databaseName = databaseName;
         this.atomicMongoFactory = new AtomicReference<>();
     }
@@ -79,12 +90,20 @@ public class WithEmbeddedMongo implements BeforeAllCallback, AfterAllCallback, P
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws IOException {
+    @SuppressWarnings("resource")
+    public void beforeAll(ExtensionContext context) {
+
+        Version.Main embeddedVersion = switch (this.mongoVersion) {
+            case V8 -> Version.Main.V8_0;
+            case V7 -> Version.Main.V7_0;
+            case V6 -> Version.Main.V6_0;
+            case V5 -> Version.Main.V5_0;
+        };
 
         RunningMongodProcess process = Mongod.instance()
                 .withProcessOutput(Start.to(ProcessOutput.class)
                         .initializedWith(ProcessOutput.named("Slf4j Logger", log)))
-                .start(Version.Main.V6_0).current();
+                .start(embeddedVersion).current();
 
         MongoClient mongo = MongoClients.create(String.format("mongodb://%s:%d/%s",
                 process.getServerAddress().getHost(),
@@ -155,15 +174,48 @@ public class WithEmbeddedMongo implements BeforeAllCallback, AfterAllCallback, P
     }
 
     public static final class WithEmbeddedMongoBuilder {
+        private MongoVersion mongoVersion = MongoVersion.V8;
         private String databaseName = UUID.randomUUID().toString();
 
-        public WithEmbeddedMongoBuilder setDatabaseName(String databaseName) {
+        /**
+         * Set the Mongo Database version. Default {@link MongoVersion#V8}
+         *
+         * @param mongoVersion The mongo version to start
+         * @return This builder
+         */
+        public WithEmbeddedMongoBuilder dbVersion(MongoVersion mongoVersion) {
+            this.mongoVersion = mongoVersion;
+            return this;
+        }
+
+        /**
+         * Set the name of the database. Default random
+         *
+         * @param databaseName The name of the database
+         * @return This builder
+         */
+        public WithEmbeddedMongoBuilder dbName(String databaseName) {
             this.databaseName = databaseName;
             return this;
         }
 
+        /**
+         * @param databaseName set a name for the database
+         * @return The builder
+         * @deprecated use {@link WithEmbeddedMongoBuilder#dbName(String)}
+         */
+        @Deprecated(forRemoval = true, since = "1.7.3")
+        public WithEmbeddedMongoBuilder setDatabaseName(String databaseName) {
+            return dbName(databaseName);
+        }
+
+        /**
+         * Complet the extension construction
+         *
+         * @return The JUnit Extension
+         */
         public WithEmbeddedMongo build() {
-            return new WithEmbeddedMongo(databaseName);
+            return new WithEmbeddedMongo(mongoVersion, databaseName);
         }
     }
 }
