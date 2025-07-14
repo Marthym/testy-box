@@ -110,6 +110,7 @@ public final class WithSampleDataLoaded implements BeforeAllCallback, BeforeEach
     }
 
     @Override
+    @SuppressWarnings("removal")
     public void beforeEach(ExtensionContext context) {
         final String catalog = getContextCatalog(context);
         Tracker tracker = getStore(context).get(P_TRACKER + catalog, Tracker.class);
@@ -129,7 +130,8 @@ public final class WithSampleDataLoaded implements BeforeAllCallback, BeforeEach
             while (it.hasPrevious()) {
                 txDsl.delete(it.previous().getTable()).execute();
             }
-            records.forEach(r -> r.touched(true));
+            //FIXME: Change to touched when spring include jooq 3.20
+            records.forEach(r -> r.changed(true));
             txDsl.batchInsert(records).execute();
         });
     }
