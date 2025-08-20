@@ -7,6 +7,31 @@ import org.junit.platform.commons.logging.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Print all non-daemon threads after the test execution.
+ *
+ * <p>Example of use as a class extension:</p>
+ * <pre><code>
+ * {@literal @}ExtendWith(GlobalThreadMonitorExtension.class)
+ * class NestedExtensionTest {
+ *     {@literal @}Test
+ *     void should_complete_test_with_non_daemon_thread_running() {
+ *         executors.submit(() -> {
+ *             try {
+ *                 Thread.sleep(5000);
+ *             } catch (InterruptedException e) {
+ *                 // ignore
+ *             }
+ *         });
+ *
+ *         Assertions.assertThat(executors.isShutdown()).isFalse();
+ *     }
+ * }
+ * </code></pre>
+ *
+ * <p>To use it as a global extension to detect a problem, add {@code -Djunit.jupiter.extensions.autodetection.enabled=true}
+ * to the test launch options</p>
+ */
 @SuppressWarnings("java:S106")
 public class GlobalThreadMonitorExtension implements AfterAllCallback {
     private static final String ANSI_YELLOW = "\u001B[33m";
