@@ -10,7 +10,7 @@
 `testy-box` is a module providing many extensions for **JUnit 5** tests:
 
 * **testy-beat-box** provides extensions to run an in-memory [Qpid](https://qpid.apache.org/) AMQP broker and provide reactive RabbitMQ connections.
-* **testy-core-box** provides core extensions. All the other projects depend on it.
+* **[testy-core-box](testy-core-box/README.md)** provides core extensions. All the other projects depend on it.
 * **testy-jooq-box** provides extensions to run an in-memory H2 database. Test data can be inserted using [JOOQ](https://www.jooq.org/).
 * **[testy-mongo-box](testy-mongo-box/README.md)** provides extensions to run an embedded [MongoDB](https://www.mongodb.com/) database. Test data can be inserted.
 * **[testy-params-box](testy-params-box/README.md)** provides aggregators for ParameterizedTest.
@@ -18,59 +18,9 @@
 
 ## testy-core-box
 
-This project provides common extensions:
+This project provides common extensions
 
-* [WithObjectMapper](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/core/extensions/WithObjectMapper.html) configures a [Jackson](https://github.com/FasterXML/jackson) mapper for Java to JSON conversion.
-* [ChainedExtension](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/core/extensions/ChainedExtension.html) registers other test extensions and initializes them in the order of the declaration.
-
-### WithObjectMapper
-
-This extension creates and stores an `ObjectMapper` at step `BeforeAll`. This mapper can be injected as parameter.
-
-```java
-@RegisterExtension
-static final WithObjectMapper wObjectMapper = WithObjectMapper
-            .builder()
-            .addMixin(MyModel.class, MyModelMixin.class)
-            .addModule(new ParameterNamesModule())
-            .addModule(new JavaTimeModule())
-            .build();
-
-@BeforeAll
-static void beforeClass(ObjectMapper objectMapper) {
-    // (...)
-}
-```
-
-### ChainedExtension
-
-This extension registers other extensions and runs them:
-
-* `BeforeEach` and `BeforeAll` callbacks are run in the order of the declaration.
-* `AfterEach` and `AfterAll` callbacks are run in the reverse order of the declaration.
-* `ParameterResolver` resolves a type with the first extension able to resolve it. If none can resolve a parameter, the parameter resolution will fail with standard JUnit exception.
-
-This extension is usefull to register test resources in order (for instance, register the DataSource before loading the database schema):
-
-
-```java
-private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
-        .builder()
-        .setTraceLevel(DatabaseTraceLevel.ERROR)
-        .setCatalog("my_db_catalog")
-        .build();
-
-private static final WithDatabaseLoaded wTestDatabase = WithDatabaseLoaded
-        .builder()
-        .setDatasourceExtension(wDataSource)
-        .build();
-
-@RegisterExtension
-static final ChainedExtension chain = ChainedExtension
-        .outer(wDataSource)
-        .append(wTestDatabase)
-        .register();
-```
+-> **[See module documentation](testy-core-box/README.md)**
 
 ## testy-jooq-box
 
