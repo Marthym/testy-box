@@ -8,7 +8,7 @@ import fr.ght1pc9kc.testy.beat.brokers.QpidEmbeddedBroker;
 import fr.ght1pc9kc.testy.beat.messaging.AMQPHelper;
 import fr.ght1pc9kc.testy.beat.messaging.MockedReceiver;
 import fr.ght1pc9kc.testy.beat.messaging.MockedSender;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;

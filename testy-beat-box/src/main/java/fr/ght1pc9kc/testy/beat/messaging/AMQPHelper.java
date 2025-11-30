@@ -10,7 +10,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Delivery;
 import com.rabbitmq.client.Envelope;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -63,7 +63,7 @@ public final class AMQPHelper {
 
     /**
      * Delete the default reply-to queue.
-     * Do not auto delete the reply queue otherwise only one RPC message can be sent (the reply queue is deleted before sending the next one).
+     * Do not auto-delete the reply queue, otherwise only one RPC message can be sent (the reply queue is deleted before sending the next one).
      * This causes an error when trying to emit many messages during the same unit test.
      *
      * @param channel Channel to delete the queue.

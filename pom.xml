@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fr.ght1pc9kc</groupId>
@@ -42,7 +43,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
-        <jetbrains.version>26.0.2</jetbrains.version>
+        <jspecify.version>1.0.0</jspecify.version>
         <junit.version>5.13.3</junit.version>
         <lombok.version>1.18.38</lombok.version>
 
@@ -85,7 +86,7 @@
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 
-        <surefire.argline.opens />
+        <surefire.argline.opens/>
     </properties>
 
     <dependencyManagement>
@@ -215,10 +216,11 @@
 
             <!-- PROVIDED -->
             <dependency>
-                <groupId>org.jetbrains</groupId>
-                <artifactId>annotations</artifactId>
-                <version>${jetbrains.version}</version>
+                <groupId>org.jspecify</groupId>
+                <artifactId>jspecify</artifactId>
+                <version>${jspecify.version}</version>
                 <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -318,7 +320,7 @@
                     <configuration>
                         <argLine>${surefire.argline.opens}</argLine>
                         <excludes>
-                            <exclude />
+                            <exclude/>
                         </excludes>
                     </configuration>
                 </plugin>
