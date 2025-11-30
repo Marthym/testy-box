@@ -6,12 +6,15 @@ import fr.ght1pc9kc.testy.jooq.samples.JediSampleData;
 import fr.ght1pc9kc.testy.jooq.samples.LightSaberSampleData;
 import org.assertj.core.api.Assertions;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static fr.ght1pc9kc.testy.dsl.public_.tables.Jedi.JEDI;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WithSampleDataLoadedTest {
 
     private static final WithInMemoryDatasource wDs = WithInMemoryDatasource.builder()
