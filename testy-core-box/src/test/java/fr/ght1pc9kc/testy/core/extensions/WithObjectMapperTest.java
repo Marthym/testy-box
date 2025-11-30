@@ -35,7 +35,7 @@ class WithObjectMapperTest {
     @DisplayName("Test @RegisterExtension WithObjectMapper")
     class WithObjectMapperTestComplex {
         @RegisterExtension
-        WithObjectMapper wMapper = WithObjectMapper.builder()
+        static WithObjectMapper wMapper = WithObjectMapper.builder()
                 .dontFindAndRegisterModules()
                 .addModule(new ParameterNamesModule())
                 .addModule(new JavaTimeModule())

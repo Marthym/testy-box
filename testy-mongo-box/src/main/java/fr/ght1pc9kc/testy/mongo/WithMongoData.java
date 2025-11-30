@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.ght1pc9kc.testy.core.extensions.WithObjectMapper;
 import jakarta.inject.Named;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -112,7 +112,7 @@ public final class WithMongoData implements BeforeEachCallback, BeforeAllCallbac
     }
 
     private WithMongoData(WithEmbeddedMongo wEmbeddedMongo,
-                          @NotNull WithObjectMapper wObjectMapper,
+                          @NonNull WithObjectMapper wObjectMapper,
                           Map<String, MongoDataSet<?>> dataSets) {
         this.wEmbeddedMongo = wEmbeddedMongo;
         this.wObjectMapper = wObjectMapper;
