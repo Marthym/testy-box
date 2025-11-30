@@ -52,6 +52,7 @@
         <flyway.version>9.22.3</flyway.version>
         <h2.version>2.3.232</h2.version>
         <jackson.version>2.19.1</jackson.version>
+        <jackson3.version>3.0.2</jackson3.version>
         <jakarta-xml-bind.version>4.0.2</jakarta-xml-bind.version>
         <jooq.version>3.20.5</jooq.version>
         <lettuce.version>6.7.1.RELEASE</lettuce.version>
@@ -103,6 +104,11 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson3.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
