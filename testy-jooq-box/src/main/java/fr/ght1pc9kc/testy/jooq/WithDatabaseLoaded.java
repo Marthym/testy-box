@@ -2,9 +2,12 @@ package fr.ght1pc9kc.testy.jooq;
 
 import lombok.AllArgsConstructor;
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.CoreLocationPrefix;
 import org.flywaydb.core.api.Location;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
-import org.jetbrains.annotations.Nullable;
+import org.flywaydb.core.api.locations.LocationParser;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -48,13 +51,13 @@ public final class WithDatabaseLoaded implements BeforeAllCallback, BeforeEachCa
     private final @Nullable Location location;
 
     @Override
-    public void beforeAll(ExtensionContext context) {
+    public void beforeAll(@NonNull ExtensionContext context) {
         String catalog = getContextCatalog(context);
         DataSource dataSource = Objects.requireNonNull(wDatasource.getDataSource(context),
                 "DataSource not found in context Store !");
 
         Location migrationsLocation = Optional.ofNullable(location)
-                .orElseGet(() -> new Location("classpath:db/migration/" + catalog));
+                .orElseGet(() -> Location.fromPath(CoreLocationPrefix.CLASSPATH_PREFIX, "db/migration/" + catalog));
         Flyway flyway = Flyway.configure()
                 .cleanDisabled(false)
                 .dataSource(dataSource)
@@ -69,7 +72,7 @@ public final class WithDatabaseLoaded implements BeforeAllCallback, BeforeEachCa
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) {
+    public void beforeEach(@NonNull ExtensionContext context) {
         String catalog = getContextCatalog(context);
         if (getStore(context).get(P_LOADED + catalog) == null) {
             throw new IllegalStateException(getClass().getName() + " must be static and package-protected !");
@@ -120,7 +123,7 @@ public final class WithDatabaseLoaded implements BeforeAllCallback, BeforeEachCa
          * @return The current builder
          */
         public WithDatabaseLoadedBuilder setMigrationsLocation(String location) {
-            this.location = new Location(location);
+            this.location = LocationParser.parseLocation(location);
             return this;
         }
 

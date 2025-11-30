@@ -3,7 +3,6 @@ package fr.ght1pc9kc.testy.jooq;
 import fr.ght1pc9kc.testy.jooq.model.FlywayVersion;
 import lombok.EqualsAndHashCode;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.InsertValuesStepN;
@@ -31,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Extension used to initialize a Flyway history in a database.
  * A table is created into a schema provided by {@link DatasourceExtension}.
  * History rows can be inserted with model {@link FlywayVersion}.
- * <p>Example of use with default flyway history table</p>
+ * <p>Example of use with the default flyway history table</p>
  * <pre><code>
  *     private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource.builder()
  *             .setCatalog("test_db")
@@ -81,7 +80,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class WithFlywaySchemaHistory implements BeforeAllCallback, BeforeEachCallback {
 
-    @VisibleForTesting
     static final String DEFAULT_TABLE_NAME = new ClassicConfiguration().getTable();
 
     private final DatasourceExtension dataSourceExtension;
@@ -211,7 +209,6 @@ public final class WithFlywaySchemaHistory implements BeforeAllCallback, BeforeE
     /**
      * Internal Flyway JOOQ table.
      */
-    @VisibleForTesting
     @EqualsAndHashCode(callSuper = true)
     static final class FlywayTable extends TableImpl<Record> {
 
