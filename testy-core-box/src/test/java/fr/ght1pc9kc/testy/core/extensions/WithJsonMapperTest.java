@@ -14,6 +14,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import tools.jackson.core.Version;
 import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.MapperBuilder;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -89,7 +90,55 @@ class WithJsonMapperTest {
                 .build();
 
         @Test
-        void should_inject_object_mapper(JsonMapper tested) {
+        void should_inject_object_mapper(ObjectMapper tested) {
+            utilities.verify(MapperBuilder::findModules, Mockito.times(1));
+            assertThat(tested.registeredModules()).extracting(JacksonModule::getModuleName).containsOnly(
+                    "AutoloadedModule", "DummyModule"
+            );
+
+            assertThat(tested.serializationConfig().findMixInClassFor(Dummy.class))
+                    .isEqualTo(DummyMixin.class);
+            assertThat(tested.deserializationConfig().findMixInClassFor(Dummy.class))
+                    .isEqualTo(DummyMixin.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("Test @RegisterExtension WithJsonMapper")
+    class WithJsonMapperTestWithNonStaticAutoload {
+        @RegisterExtension
+        @SuppressWarnings("JUnitMalformedDeclaration")
+        WithJsonMapper wMapper = WithJsonMapper.builder()
+                .addModule(new DummyModule())
+                .addMixin(Dummy.class, DummyMixin.class)
+                .build();
+
+        @Test
+        void should_inject_object_mapper(ObjectMapper tested) {
+            utilities.verify(MapperBuilder::findModules, Mockito.times(1));
+            assertThat(tested.registeredModules()).extracting(JacksonModule::getModuleName).containsOnly(
+                    "AutoloadedModule", "DummyModule"
+            );
+
+            assertThat(tested.serializationConfig().findMixInClassFor(Dummy.class))
+                    .isEqualTo(DummyMixin.class);
+            assertThat(tested.deserializationConfig().findMixInClassFor(Dummy.class))
+                    .isEqualTo(DummyMixin.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("Test @RegisterExtension WithJsonMapper")
+    class WithJsonMapperTestWithAddModules {
+        @RegisterExtension
+        @SuppressWarnings("JUnitMalformedDeclaration")
+        WithJsonMapper wMapper = WithJsonMapper.builder()
+                .addModules(List.of(new DummyModule()))
+                .addMixin(Dummy.class, DummyMixin.class)
+                .build();
+
+        @Test
+        void should_inject_object_mapper(ObjectMapper tested) {
             utilities.verify(MapperBuilder::findModules, Mockito.times(1));
             assertThat(tested.registeredModules()).extracting(JacksonModule::getModuleName).containsOnly(
                     "AutoloadedModule", "DummyModule"
