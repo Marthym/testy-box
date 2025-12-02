@@ -79,19 +79,19 @@ public class WithJsonMapper implements BeforeAllCallback, BeforeEachCallback, Pa
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return JsonMapper.class.equals(parameterContext.getParameter().getType());
+        return ObjectMapper.class.isAssignableFrom(parameterContext.getParameter().getType());
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        if (JsonMapper.class.equals(parameterContext.getParameter().getType())) {
+        if (ObjectMapper.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return getStore(extensionContext).get(P_JACKSON_MAPPER);
         }
         throw new ParameterResolutionException("Unable to resolve ObjectMapper !");
     }
 
-    public JsonMapper getObjectMapper(ExtensionContext context) {
-        return getStore(context).get(P_JACKSON_MAPPER, JsonMapper.class);
+    public ObjectMapper getObjectMapper(ExtensionContext context) {
+        return getStore(context).get(P_JACKSON_MAPPER, ObjectMapper.class);
     }
 
     private Store getStore(ExtensionContext context) {
