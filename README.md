@@ -15,6 +15,7 @@
 * **[testy-mongo-box](testy-mongo-box/README.md)** provides extensions to run an embedded [MongoDB](https://www.mongodb.com/) database. Test data can be inserted.
 * **[testy-params-box](testy-params-box/README.md)** provides aggregators for ParameterizedTest.
 * **[testy-redis-box](testy-redis-box/README.md)** provides extensions to run an embedded [Redis](https://redis.io/) database.
+* **[testy-search-box](testy-search-box/README.md)** provides extensions to run an embedded [OpenSearch](https://opensearch.org/) node. Test data can be indexed.
 
 ## testy-core-box
 
