@@ -139,6 +139,7 @@ public final class WithOpenSearchData implements BeforeEachCallback, BeforeAllCa
                             .document(doc)));
                 }).toList();
         if (operations.isEmpty()) {
+            client.indices().create(c -> c.index(index));
             return;
         }
 

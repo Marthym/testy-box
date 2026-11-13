@@ -24,6 +24,7 @@ class WithOpenSearchDataTest {
     private static final String INDEX_0 = "first-index";
     private static final String INDEX_1 = "second-index";
     private static final String INDEX_JEDI = "jedi";
+    private static final String INDEX_EMPTY = "empty-index";
 
     record Jedi(String name, String side) {
     }
@@ -51,6 +52,7 @@ class WithOpenSearchDataTest {
             .addDataset(INDEX_0, MAP_DATA_SET)
             .addDataset(INDEX_1, MAP_DATA_SET)
             .addDataset(INDEX_JEDI, JEDI_DATA_SET)
+            .addDataset(INDEX_EMPTY, List::of)
             .build();
 
     @RegisterExtension
@@ -98,6 +100,12 @@ class WithOpenSearchDataTest {
     @Order(4)
     void should_reset_data_after_skip() throws IOException {
         assertThat(hits(INDEX_JEDI)).containsOnlyKeys("Luke", "Obiwan");
+    }
+
+    @Test
+    @Order(5)
+    void should_search_empty_index() throws IOException {
+        assertThat(hits(INDEX_EMPTY)).isEmpty();
     }
 
     @SuppressWarnings("rawtypes")

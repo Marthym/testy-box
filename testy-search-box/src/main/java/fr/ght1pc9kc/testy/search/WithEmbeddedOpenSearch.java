@@ -58,8 +58,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WithEmbeddedOpenSearch implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
-    private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(WithEmbeddedOpenSearch.class);
-
     private static final String P_OPENSEARCH_PORT = "openSearchPort";
     private static final String P_OPENSEARCH_CLIENT = "openSearchClient";
     private static final String P_OPENSEARCH_RUNNER = "openSearchRunner";
@@ -140,6 +138,6 @@ public class WithEmbeddedOpenSearch implements BeforeAllCallback, AfterAllCallba
     }
 
     private ExtensionContext.Store getStore(ExtensionContext context) {
-        return context.getStore(NAMESPACE);
+        return context.getStore(ExtensionContext.Namespace.create(WithEmbeddedOpenSearch.class, this));
     }
 }
