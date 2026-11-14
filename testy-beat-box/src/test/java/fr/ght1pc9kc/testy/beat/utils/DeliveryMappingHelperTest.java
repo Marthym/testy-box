@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.google.common.collect.ImmutableList;
 import com.rabbitmq.client.Delivery;
 import fr.ght1pc9kc.testy.beat.utils.samples.TestModel;
 import fr.ght1pc9kc.testy.core.extensions.WithObjectMapper;
@@ -59,10 +58,10 @@ class DeliveryMappingHelperTest {
 
     @Test
     void should_map_with_type_reference() {
-        final TypeReference<List<TestModel>> typeReference = new TypeReference<List<TestModel>>() {
+        final TypeReference<List<TestModel>> typeReference = new TypeReference<>() {
         };
 
-        final byte[] body = DeliveryMappingHelper.writeObjectAsByte(ImmutableList.of(TestModel.OBIWAN, TestModel.ANAKIN), objectMapper);
+        final byte[] body = DeliveryMappingHelper.writeObjectAsByte(List.of(TestModel.OBIWAN, TestModel.ANAKIN), objectMapper);
 
         final Delivery delivery = new Delivery(null, null, body);
         final List<TestModel> actual = DeliveryMappingHelper.readDeliveryValue(delivery, objectMapper, typeReference);
@@ -72,7 +71,7 @@ class DeliveryMappingHelperTest {
 
     @Test
     void should_fail_to_convert_invalid_type_delivery_with_type_reference() {
-        final TypeReference<List<TestModel>> typeReference = new TypeReference<List<TestModel>>() {
+        final TypeReference<List<TestModel>> typeReference = new TypeReference<>() {
         };
         final byte[] invalidBody = "invalid-value".getBytes(StandardCharsets.UTF_8);
         final Delivery delivery = new Delivery(null, null, invalidBody);
@@ -95,7 +94,7 @@ class DeliveryMappingHelperTest {
     }
 
     private static final class MockedException extends JsonProcessingException {
-        protected MockedException(String msg) {
+        private MockedException(String msg) {
             super(msg);
         }
     }
