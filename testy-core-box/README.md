@@ -8,6 +8,9 @@ Testy-Core6box is the basic module with few dependencies. It provides the follow
 ### WithObjectMapper
 
 This extension creates and stores an `ObjectMapper` at step `BeforeAll`. This mapper can be injected as parameter.
+In this example, `MyModel` and `MyModelMixin` are your application's model and Jackson mixin classes.
+`ObjectMapper`, `ParameterNamesModule` and `JavaTimeModule` are the Jackson 2 types from `com.fasterxml.jackson`.
+Add `com.fasterxml.jackson.module:jackson-module-parameter-names` and `com.fasterxml.jackson.datatype:jackson-datatype-jsr310` to your test dependencies to use these modules; they are not provided transitively by `testy-core-box`.
 
 ```java
 @RegisterExtension
@@ -33,7 +36,7 @@ This extension registers other extensions and runs them:
 * `ParameterResolver` resolves a type with the first extension able to resolve it. If none can resolve a parameter, the parameter resolution will fail with standard JUnit exception.
 
 This extension is usefull to register test resources in order (for instance, register the DataSource before loading the database schema):
-
+The following example requires `testy-jooq-box`, with the Flyway migrations in `src/test/resources/db/migration/my_db_catalog`.
 
 ```java
 private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
@@ -76,24 +79,24 @@ detect problematic tests among your hundreds of tests by recording them globally
 class NestedExtensionTest {
     @Test
     void should_complete_test_with_non_daemon_thread_running() {
-        executors.submit(() -> {
+        Thread thread = Thread.ofPlatform().name("global-thread-monitor-example").daemon(false).start(() -> {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                // ignore
+                Thread.currentThread().interrupt();
             }
         });
 
-        Assertions.assertThat(executors.isShutdown()).isFalse();
+        org.assertj.core.api.Assertions.assertThat(thread.isDaemon()).isFalse();
     }
 }
 ```
 
-When running this test, you will see the following output:
+The thread stops after five seconds. If it is still running when the class finishes, the extension prints:
 
 ```shell
-[WARNING] ⚠️ Threads non-daemon après BaywatchApplicationTests
-          -> global-thread-monitor-1
+[WARNING] ⚠️ non-daemon threads after NestedExtensionTest
+          -> global-thread-monitor-example
 ```
 
 #### Register as a global extension
