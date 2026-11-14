@@ -4,7 +4,7 @@
 
     <groupId>fr.ght1pc9kc</groupId>
     <artifactId>testy-box</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
     <packaging>pom</packaging>
 
     <name>Testy Box</name>
@@ -21,7 +21,7 @@
         <connection>scm:git:git@git.trenzalor.lo:ght1pc9kc.fr/testy-box.git</connection>
         <developerConnection>scm:git:git@git.trenzalor.lo:ght1pc9kc.fr/testy-box.git</developerConnection>
         <url>https://github.com/Marthym/testy-box</url>
-        <tag>2.3.0</tag>
+        <tag>2.4.0</tag>
     </scm>
 
     <modules>
@@ -43,50 +43,50 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
-        <jspecify.version>1.0.0</jspecify.version>
-        <junit.version>6.0.1</junit.version>
-        <lombok.version>1.18.42</lombok.version>
+        <jspecify.version>1.0.1</jspecify.version>
+        <junit.version>6.1.3</junit.version>
+        <lombok.version>1.18.48</lombok.version>
 
-        <amqp-client.version>5.18.0</amqp-client.version>
-        <embed-mongo.version>4.21.0</embed-mongo.version>
-        <embedded-redis.version>1.4.3</embedded-redis.version>
-        <flyway.version>11.18.0</flyway.version>
-        <h2.version>2.4.240</h2.version>
-        <jackson.version>2.20.1</jackson.version>
-        <jackson3.version>3.0.2</jackson3.version>
-        <jakarta-xml-bind.version>4.0.4</jakarta-xml-bind.version>
-        <jooq.version>3.20.9</jooq.version>
-        <lettuce.version>7.1.0.RELEASE</lettuce.version>
-        <mongodb-driver.version>5.6.1</mongodb-driver.version>
-        <opensearch-java.version>3.10.0</opensearch-java.version>
+        <amqp-client.version>5.37.1</amqp-client.version>
+        <embed-mongo.version>5.0.0</embed-mongo.version>
+        <embedded-redis.version>1.4.4</embedded-redis.version>
+        <flyway.version>13.12.2</flyway.version>
+        <h2.version>2.5.252</h2.version>
+        <jackson.version>2.23.0</jackson.version>
+        <jackson3.version>3.3.0</jackson3.version>
+        <jakarta-xml-bind.version>4.0.5</jakarta-xml-bind.version>
+        <jooq.version>3.21.9</jooq.version>
+        <lettuce.version>7.9.0.RELEASE</lettuce.version>
+        <mongodb-driver.version>5.14.0</mongodb-driver.version>
+        <opensearch-java.version>3.11.0</opensearch-java.version>
         <opensearch-runner.version>3.9.0.0</opensearch-runner.version>
-        <qbit.version>9.2.1</qbit.version>
+        <qbit.version>10.1.1</qbit.version>
         <reactor-rabbitmq.version>1.5.6</reactor-rabbitmq.version>
-        <reactor.version>3.8.0</reactor.version>
-        <slf4j.version>2.0.17</slf4j.version>
-        <spring-mongo.version>5.0.0</spring-mongo.version>
+        <reactor.version>3.8.8</reactor.version>
+        <slf4j.version>2.0.20</slf4j.version>
+        <spring-mongo.version>5.1.2</spring-mongo.version>
 
-        <assertj.version>3.27.6</assertj.version>
-        <logback.version>1.5.21</logback.version>
-        <mockito.version>5.20.0</mockito.version>
-        <byte-buddy.version>1.18.2</byte-buddy.version>
+        <assertj.version>3.27.7</assertj.version>
+        <logback.version>1.6.6</logback.version>
+        <mockito.version>5.24.0</mockito.version>
+        <byte-buddy.version>1.18.17</byte-buddy.version>
 
-        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
-        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
-        <flyway-maven-plugin.version>11.18.0</flyway-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
-        <jooq-codegen-maven.version>3.20.9</jooq-codegen-maven.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
-        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <build-helper-maven-plugin.version>3.8.0</build-helper-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
+        <flyway-maven-plugin.version>13.12.2</flyway-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.16</jacoco-maven-plugin.version>
+        <jooq-codegen-maven.version>3.21.9</jooq-codegen-maven.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
-        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-scm-api.version>2.2.1</maven-scm-api.version>
         <maven-scm-provider-gitexe.version>2.2.1</maven-scm-provider-gitexe.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.6.1</maven-surefire-plugin.version>
 
         <surefire.argline.opens />
     </properties>
@@ -182,6 +182,13 @@
 
 
             <!--MONGO-->
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-bom</artifactId>
+                <version>${mongodb-driver.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>de.flapdoodle.embed</groupId>
                 <artifactId>de.flapdoodle.embed.mongo</artifactId>
