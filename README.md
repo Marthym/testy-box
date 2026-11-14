@@ -1,300 +1,57 @@
-# testy-box [![](https://img.shields.io/github/release/Marthym/testy-box.svg)](https://GitHub.com/Marthym/testy-box/releases/) [![GitHub license](https://img.shields.io/github/license/Marthym/testy-box.svg)](https://github.com/Marthym/testy-box/blob/master/LICENSE)
+# testy-box: JUnit extensions for Java integration tests
+<img src="assets/testy-box.webp" alt="testy-box logo" align="right" width="250">
+
+[![Latest release](https://img.shields.io/github/release/Marthym/testy-box.svg)](https://GitHub.com/Marthym/testy-box/releases/)
+[![GitHub license](https://img.shields.io/github/license/Marthym/testy-box.svg)](https://github.com/Marthym/testy-box/blob/master/LICENSE)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Marthym_testy-box&metric=alert_status)](https://sonarcloud.io/dashboard?id=Marthym_testy-box)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Marthym_testy-box&metric=coverage)](https://sonarcloud.io/dashboard?id=Marthym_testy-box)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Marthym_testy-box&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Marthym_testy-box)
 
 
-## Description
+`testy-box` is a collection of JUnit Jupiter extensions for Java integration tests. Start an embedded database or AMQP broker,
+load test data, and inject clients directly into your test methods.
 
-`testy-box` is a module providing many extensions for **JUnit 5** tests:
+Use it to test SQL and MongoDB repositories, Redis access, OpenSearch queries, or code that sends and receives RabbitMQ
+messages. Each module covers a specific testing need, so you can add the ones your project uses.
 
-* **testy-beat-box** provides extensions to run an in-memory [Qpid](https://qpid.apache.org/) AMQP broker and provide reactive RabbitMQ connections.
-* **[testy-core-box](testy-core-box/README.md)** provides core extensions. All the other projects depend on it.
-* **testy-jooq-box** provides extensions to run an in-memory H2 database. Test data can be inserted using [JOOQ](https://www.jooq.org/).
-* **[testy-mongo-box](testy-mongo-box/README.md)** provides extensions to run an embedded [MongoDB](https://www.mongodb.com/) database. Test data can be inserted.
-* **[testy-params-box](testy-params-box/README.md)** provides aggregators for ParameterizedTest.
-* **[testy-redis-box](testy-redis-box/README.md)** provides extensions to run an embedded [Redis](https://redis.io/) database.
-* **[testy-search-box](testy-search-box/README.md)** provides extensions to run an embedded [OpenSearch](https://opensearch.org/) node. Test data can be indexed.
+## Modules and documentation
 
-## testy-core-box
+Each module README describes its tools and shows how to use them with Java examples.
 
-This project provides common extensions
+| Module | What you can test |
+| --- | --- |
+| [testy-jooq-box](testy-jooq-box/README.md) | SQL repositories with an in-memory H2 database, Flyway schema migrations, and test data loaded through [jOOQ](https://www.jooq.org/). |
+| [testy-mongo-box](testy-mongo-box/README.md) | [MongoDB](https://www.mongodb.com/) repositories with an embedded database, collection data sets, and reactive clients. |
+| [testy-redis-box](testy-redis-box/README.md) | [Redis](https://redis.io/) access with an embedded server and an injectable Lettuce client. |
+| [testy-search-box](testy-search-box/README.md) | [OpenSearch](https://opensearch.org/) queries with an embedded node and test documents indexed before each test. |
+| [testy-beat-box](testy-beat-box/README.md) | RabbitMQ messaging with an embedded [Qpid](https://qpid.apache.org/) AMQP broker, reactive connection options, and helpers to publish messages or simulate replies. |
+| [testy-core-box](testy-core-box/README.md) | JSON mapping with Jackson, ordered extension initialization, and detection of non-daemon threads left running after tests. Provides common extensions used by the database and messaging modules. |
+| [testy-params-box](testy-params-box/README.md) | Parameterized tests that aggregate CSV arguments into string varargs. |
 
--> **[See module documentation](testy-core-box/README.md)**
+## How the extensions fit into your tests
 
-## testy-jooq-box
+Register extensions with JUnit Jupiter using `@RegisterExtension` or, where supported, `@ExtendWith`. The extensions manage
+resource setup and teardown through JUnit lifecycle callbacks. Test and lifecycle methods can receive resources such as
+a `DataSource`, `DSLContext`, `MongoClient`, `RedisClient`, or `OpenSearchClient` as parameters.
 
-This project is used to test SQL repositorites.
-It provides extensions to load an in-memory H2 database, execute SQL scripts with [Flyway](https://flywaydb.org) and insert test data.
+For tests that need several resources, `ChainedExtension` initializes extensions in declaration order and tears them down
+in reverse order. For example, you can start an H2 database, apply Flyway migrations, create a jOOQ context, and then load
+the records needed by your tests.
 
-* [WithInMemoryDatasource](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/WithInMemoryDatasource.html) loads a H2 SQL database in-memory on a named catalog.
-* [WithDatabaseLoaded](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/WithDatabaseLoaded.html) creates the database schema on the catalog using [Flyway](https://flywaydb.org) SQL scripts.
-* [WithDslContext](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/WithDslContext.html) creates JOOQ `DSLContext` from the input DataSource.
-* [WithSampleDataLoaded](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/WithSampleDataLoaded.html) reset the content of the tables before each test using JOOQ records.
+The jOOQ, MongoDB, and OpenSearch data extensions reset their configured test data before each test. Their trackers let
+tests that leave the data unchanged skip the next reload. See the module documentation for reset behavior and examples.
 
-### WithInMemoryDatasource
+## Choose a module
 
-This extension creates a named H2 database in memory.
+Add the module you need to your project's test dependencies. The Maven group ID is `fr.ght1pc9kc`; artifact IDs match the
+module names in the table above. Check the [releases](https://GitHub.com/Marthym/testy-box/releases/) for published versions.
+The current source targets Java 21 and uses JUnit Jupiter.
 
-```java
-@RegisterExtension
-static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
-            .builder()
-            .setTraceLevel(DatabaseTraceLevel.ERROR)
-            .setCatalog("my_catalog")
-            .build();
-```
+Start with the README for your database or messaging module. For shared utilities and extension composition, read the
+[core extension documentation](testy-core-box/README.md).
 
-After this extension has been registered, the `DataSource` can be injected as parameter.
+## Contributing and license
 
-```java
-@BeforeAll
-static void beforeClass(DataSource dataSource) {
-    // (...)
-}
-
-@BeforeEach
-void setUp(DataSource dataSource) {
-    // (...)
-}
-```
-
-If the test registers more than one data source, the parameters shall be annotated with `javax.inject.Named` to distinct them:
-
-```java
-@RegisterExtension
-static final WithInMemoryDatasource wDataSource1 = WithInMemoryDatasource
-            .builder()
-            .setCatalog("my_catalog_1")
-            .build();
-
-@RegisterExtension
-static final WithInMemoryDatasource wDataSource2 = WithInMemoryDatasource
-            .builder()
-            .setCatalog("my_catalog_2")
-            .build();
-
-@BeforeEach
-void setUp(@Named("my_catalog_1") DataSource dataSource1, 
-           @Named("my_catalog_2") DataSource dataSource2) {
-    // (...)
-}
-```
-
-### WithDatabaseLoaded
-
-This extension depends on a [DatasourceExtension](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/DatasourceExtension.html) and runs a [Flyway](https://flywaydb.org/) migration on the related DB catalog.
-
-By default, the SQL scripts have to be located  into `db.migration.<catalog>` in the classpath, where `<catalog>` is the name of DataSource catalog. The names of the SQL files shall match [Flyway naming convention](https://flywaydb.org/documentation/migrations#naming).
-
-The SQL scripts are run **before all the test methods**. They are expected to be used to create the database schema.
-
-```java
-private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
-        .builder()
-        .setCatalog("my_catalog")
-        .build();
-
-// SQL files shall be located in classpath:db.migration.my_catalog
-private static final WithDatabaseLoaded wDatabaseLoaded = WithDatabaseLoaded
-        .builder()
-        .setDatasourceExtension(wDataSource)
-        .build();
-
-@RegisterExtension
-static final ChainedExtension chain = ChainedExtension
-        .outer(wDataSource)
-        .append(wDatabaseLoaded)
-        .register();
-```
-
-### WithDslContext
-
-This extension depends on a [DatasourceExtension](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/DatasourceExtension.html) and creates a [JOOQ DSLContext](https://www.jooq.org/doc/3.13/manual/sql-building/dsl-context/) on the related DataSource.
-
-```java
-    private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
-            .builder()
-            .setCatalog("my_catalog")
-            .build();
-    private static final WithDslContext wDsl = WithDslContext
-            .builder()
-            .setDatasourceExtension(wDataSource)
-            .build();
-
-    @RegisterExtension
-    static final ChainedExtension chain = ChainedExtension
-            .outer(wDataSource)
-            .append(wDsl)
-            .register();
-```
-
-This DSL can be injected as parameter.
-
-```java
-@BeforeEach
-void setUp(DSLContext dsl) {
-    // (...)
-}
-```
-
-If many catalogs are registered, the parameter shall be annotated with `javax.inject.Named`:
-
-```java
-@BeforeEach
-void setUp(@Named("my_catalog_1") DSLContext dsl1, 
-           @Named("my_catalog_2") DSLContext dsl2) {
-    // (...)
-}
-```
-
-### WithSampleDataLoaded
-
-This extension deletes and inserts test data **before each test method**.
-
-The test data are inserted as JOOQ records. They can be defined with classes implementing [RelationalDataSet](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/jooq/model/RelationalDataSet.html)
-
-```java
-public final class MyElementDataSet implements RelationalDataSet<MyElementRecord> {
-
-    @Override
-    public List<MyElementRecord> records() {
-        // Return all the records to insert in the table
-    }
-}
-```
-
-These data set can be added to the extension `WithSampleDataLoaded` to setup the test data
-
-```java
-private static final WithInMemoryDatasource wDataSource = WithInMemoryDatasource
-        .builder()
-        .setCatalog("my_catalog")
-        .build();
-private static final WithDatabaseLoaded wDatabaseLoaded = WithDatabaseLoaded
-        .builder()
-        .setDatasourceExtension(wDataSource)
-        .build();
-private static final WithDslContext wDSLContext = WithDslContext
-        .builder()
-        .setDatasourceExtension(wDataSource)
-        .build();
-
-private static final WithSampleDataLoaded wSamples = WithSampleDataLoaded
-        .builder(wDSLContext)
-        .addDataset(new MyElementDataSet())
-        .build();
-
-@RegisterExtension
-static final ChainedExtension chain = ChainedExtension
-        .outer(wDataSource)
-        .append(wDatabaseLoaded)
-        .append(wDSLContext)
-        .append(wSamples)
-        .register();
-```
-
-:fire: Only the tables related to the data sets are emptied before each test. If a test inserts rows into another table, this table shall be emptied manually. :fire:
-
-## testy-beat-box
-
-This project is used to test classes using RabbitMQ. It provides an extension to run an embedded AMQP broker.
-
-* [WithRabbitMock](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/beat/extensions/WithRabbitMock.html) runs an embedded AMQP broker.
-
-### WithRabbitMock
-
-This extension runs an embedded AMQP broker ([Qpid](https://qpid.apache.org/) by default).
-
-When registered, the Rabbit [SenderOptions](https://projectreactor.io/docs/rabbitmq/snapshot/api/reactor/rabbitmq/SenderOptions.html) and [ReceiverOptions](https://projectreactor.io/docs/rabbitmq/milestone/api/reactor/rabbitmq/ReceiverOptions.html) can be injected as parameters.
-
-```java
-@RegisterExtension
-static final WithRabbitMock withRabbitMock = WithRabbitMock
-            .builder()
-            .build();
-
-@BeforeAll
-static void beforeClass(SenderOptions senderOptions,
-                        ReceiverOptions receiverOptions) {
-    // (...)
-}
-```
-
-Before each test method, a RabbitMQ [Connection](https://www.rabbitmq.com/releases/rabbitmq-java-client/v1.4.0/rabbitmq-java-client-javadoc-1.4.0/com/rabbitmq/client/Connection.html) and a [Channel](https://www.rabbitmq.com/releases/rabbitmq-java-client/v1.4.0/rabbitmq-java-client-javadoc-1.4.0/com/rabbitmq/client/Channel.html) are opened. They can be injected as parameters.
-
-```java
-@RegisterExtension
-static final WithRabbitMock withRabbitMock = WithRabbitMock
-            .builder()
-            .build();
-
-@BeforeEach
-void setUp(Connection connection,
-           Channel channel) {
-    // (...)
-}
-```
-
-Queues and exchanges can also be created with the extension. When declaring a queue and an exchange, they are bound together with an empty routing key.
-
-```java
-@RegisterExtension
-static final WithRabbitMock withRabbitMock = WithRabbitMock
-            .builder()
-            .declareQueueAndExchange("my_queue", "my_exchange")
-            .build();
-```
-
-The queues are deleted automatically by closing the connection after each test method.
-
-In order to simplify mocking of rabbit queues, Mocked sender and receiver can be injected to the test:
-
-- [MockedSender](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/beat/messaging/MockedSender.html)
-- [MockedReceiver](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/beat/messaging/MockedReceiver.html)
-
-These mocks use [AmqpMessage](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/beat/messaging/AmqpMessage.html) as requests/responses. **AmqpMessage** can define the body and the headers of the message.
-
-```java
-@RegisterExtension
-static final WithRabbitMock withRabbitMock = WithRabbitMock
-            .builder()
-            .declareQueueAndExchange("my_queue", "my_exchange")
-            .build();
-
-@Test
-void myTest(MockedSender mockedSender) {
-    final AmqpMessage request = AmqpMessage.of("test-request".getBytes());
-    final String routingKey = "";
-
-    // Simply publish a message on the tested queue
-    mockedSender.basicPublish(request)
-                .on("my_exchange", routingKey);
-
-    // Send a RPC request
-    final Mono<Delivery> response = mockedSender.rpc(request)
-                .on("my_exchange", routingKey);
-    // (...)
-}
-```
-
-```java
-@RegisterExtension
-static final WithRabbitMock withRabbitMock = WithRabbitMock
-            .builder()
-            .declareQueueAndExchange("my_queue", "my_exchange")
-            .build();
-
-@Test
-void myTest(MockedReceiver mockedReceiver) {
-    final AmqpMessage response = AmqpMessage.of("test-response".getBytes());
-
-    // To consume more than one message, use consume(int)
-    final Flux<Delivery> requests = mockedReceiver.consumeOne()
-                  .on("my_queue")
-                  .thenRespond(response)
-                  .start();
-    // (...)
-}
-```
+Read the [contribution guide](CONTRIBUTING.md) to report an issue or propose a change.
+`testy-box` is distributed under the [MIT license](LICENSE).

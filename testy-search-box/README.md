@@ -40,6 +40,8 @@ The documents of an index are defined by implementing `OpenSearchDataSet`. Objec
 The `identifier()` field (`_id` by default) gives the document id.
 
 ```java
+record Jedi(String name, String side) {}
+
 public class JediDataSet implements OpenSearchDataSet<Jedi> {
     @Override
     public List<Jedi> documents() {
@@ -53,7 +55,7 @@ public class JediDataSet implements OpenSearchDataSet<Jedi> {
 }
 ```
 
-Before each test, every index is deleted and filled with its data set, already refreshed and searchable.
+Before each test, each configured index is deleted and filled with its data set, already refreshed and searchable.
 
 ```java
 private static final WithEmbeddedOpenSearch wOpenSearch = WithEmbeddedOpenSearch.builder().build();

@@ -13,7 +13,7 @@ This extension starts an embedded MongoDB.
 @RegisterExtension
 static final WithEmbeddedMongo wMongo = WithEmbeddedMongo.builder()
         .dbVersion(MongoVersion.V7)
-        .dbName(DATABASE)
+        .dbName("my_database")
         .build();
 ```
 
@@ -33,11 +33,13 @@ void setUp(MongoClient mongoClient,
 This extension resets the content of the collections before each test method. The data of a collection can be defined by implementing [MongoDataSet](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/mongo/MongoDataSet.html).
 
 ```java
+record MyElement(String name) {}
+
 public class MyElementDataSet implements MongoDataSet<MyElement> {
 
     @Override
     public List<MyElement> documents() {
-        // List the objects to be inserted in the collection
+        return List.of(new MyElement("Obiwan"), new MyElement("Yoda"));
     }
 }
 ```
@@ -76,6 +78,7 @@ The next test will not drop and reload the DataSets.
 
 #### Using custom Object Mapper
 Optionally, a specific mapper can be used to convert objects to Mongo Documents by including the extension [WithObjectMapper](https://marthym.github.io/testy-box/fr/ght1pc9kc/testy/core/extensions/WithObjectMapper.html).
+This example uses the Jackson 2 `JavaTimeModule`, which requires `com.fasterxml.jackson.datatype:jackson-datatype-jsr310` in your test dependencies.
 
 ```java
 private static final WithEmbeddedMongo wMongo = WithEmbeddedMongo
